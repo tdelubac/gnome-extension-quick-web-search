@@ -1,0 +1,8 @@
+{
+  "name": "Quick Web Search",
+  "description": "Use Super key for quick web search",
+  "uuid": "quick@web.search",
+  "shell-version": [
+    "44"
+  ]
+}
