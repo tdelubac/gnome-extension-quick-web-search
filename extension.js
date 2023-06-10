@@ -25,7 +25,6 @@ let gicon = Gio.icon_new_for_string(Me.path + "/internet-web-browser.svg");
 
 const SearchResults = Main.overview._overview._controls._searchController._searchResults;
 
-
 class SearchProvider {
 
     /**
@@ -74,7 +73,6 @@ class SearchProvider {
      */
     activateResult(result, terms) {
         let context = new Gio.AppLaunchContext;
-//        Gio.AppInfo.launch_default_for_uri('www.lemonde.fr', context);
         Gio.AppInfo.create_from_commandline(`xdg-open "https://www.duckduckgo.com/?q=${terms.join('+')}"`, null, 2).launch([], context);
     }
 
@@ -91,6 +89,7 @@ class SearchProvider {
      * @param {string[]} terms - The search terms
      */
     launchSearch(terms) {
+        return null;
     }
 
     /**
@@ -105,8 +104,6 @@ class SearchProvider {
      * @returns {Clutter.Actor} An actor for the result
      */
     createResultObject(meta) {
-        console.debug(`createResultObject(${meta.id})`);
-
         return null;
     }
 
@@ -120,8 +117,6 @@ class SearchProvider {
      * @returns {Promise<ResultMeta[]>} A list of result metadata objects
      */
     getResultMetas(results, cancellable = null) {
-        console.debug(`getResultMetas([${results}])`);
-
         const { scaleFactor } = St.ThemeContext.get_for_stage(global.stage);
 
         return new Promise((resolve, reject) => {
@@ -137,10 +132,8 @@ class SearchProvider {
                         return new St.Icon({ gicon });
                     },
                 };
-
                 resultMetas.push(meta);
             }
-
             resolve(resultMetas);
         });
     }
@@ -156,8 +149,6 @@ class SearchProvider {
      * @returns {Promise<string[]>} A list of result identifiers
      */
     getInitialResultSet(terms, cancellable = null) {
-        console.debug(`getInitialResultSet([${terms}])`);
-
         return new Promise((resolve, reject) => {
             const identifiers = ['Web Search'];
 
@@ -181,8 +172,6 @@ class SearchProvider {
      * @returns {Promise<string[]>}
      */
     getSubsearchResultSet(results, terms, cancellable = null) {
-        console.debug(`getSubsearchResultSet([${results}], [${terms}])`);
-
         return this.getInitialResultSet(terms, cancellable);
     }
 
@@ -199,8 +188,6 @@ class SearchProvider {
      * @returns {string[]} The filtered results
      */
     filterResults(results, maxResults) {
-        console.debug(`filterResults([${results}], ${maxResults})`);
-
         if (results.length <= maxResults)
             return results;
 
@@ -216,18 +203,16 @@ class Extension {
 
     enable() {
         if (this._provider === null) {
-            console.log('Enabling Quick Web Search 3');
             this._provider = new SearchProvider();
             SearchResults._registerProvider(this._provider);
         }
     }
 
     disable() {
-        global.log('Desabling Quick Web Search 2');
-    //    if (this._provider instanceof SearchProvider) {
-     //       SearchResults._unregisterProvider(this._provider);
-      //      this._provider = null;
-       // }
+        if (this._provider instanceof SearchProvider) {
+           SearchResults._unregisterProvider(this._provider);
+            this._provider = null;
+        }
     }
 }
 
