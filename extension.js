@@ -21,7 +21,7 @@
 const Main = imports.ui.main;
 const { St, Gio } = imports.gi;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
-let gicon = Gio.icon_new_for_string(Me.path + "/internet-web-browser.svg");
+//let gicon = Gio.icon_new_for_string(Me.path + "/duckduckgo.png");
 
 const SearchResults = Main.overview._overview._controls._searchController._searchResults;
 
@@ -129,8 +129,14 @@ class SearchProvider {
                     description: 'Launch web search',
                     clipboardText: 'Launch web search',
                     createIcon: (size) => {
-                        return new St.Icon({ gicon });
-                    },
+                        let ic = new St.Icon({
+//                            gicon,
+                            icon_name: 'web-browser',
+                            width: size, //* scaleFactor,
+                            height: size, //* scaleFactor,
+                        })
+                        return ic;
+                    }
                 };
                 resultMetas.push(meta);
             }
